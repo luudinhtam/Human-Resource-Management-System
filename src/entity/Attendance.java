@@ -1,0 +1,98 @@
+package entity;
+
+import java.time.LocalDate;
+
+public class Attendance {
+
+    private String employeeId;
+    private LocalDate date;
+    private AttendanceStatus status;
+    private double overtimeHours;
+    private String note;
+
+    public Attendance(String employeeId, LocalDate date, AttendanceStatus status) {
+        this(employeeId, date, status, 0, "");
+    }
+
+    public Attendance(String employeeId, LocalDate date, AttendanceStatus status,
+            double overtimeHours, String note) {
+        this.employeeId = employeeId;
+        this.date = date;
+        this.status = status;
+        this.overtimeHours = overtimeHours;
+        this.note = note == null ? "" : note;
+    }
+
+    // ── Getters ──────────────────────────────────────────────────────
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public AttendanceStatus getStatus() {
+        return status;
+    }
+
+    public double getOvertimeHours() {
+        return overtimeHours;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    // ── Setters ──────────────────────────────────────────────────────
+    public void setStatus(AttendanceStatus status) {
+        this.status = status;
+    }
+
+    public void setOvertimeHours(double hours) {
+        this.overtimeHours = hours;
+    }
+
+    public void setNote(String note) {
+        this.note = note == null ? "" : note;
+    }
+
+    public void displayInfo() {
+        System.out.printf("  %s | %-8s | Overtime: %.1f hrs | Note: %s%n",
+                date, status, overtimeHours, note);
+    }
+
+    // ── Serialization ─────────────────────────────────────────────────
+    /** Format: employeeId|date|status|overtimeHours|note */
+    @Override
+    public String toString() {
+        return escapeField(employeeId) + "|"
+                + date + "|"
+                + status + "|"
+                + overtimeHours + "|"
+                + escapeField(note);
+    }
+
+    public static Attendance fromString(String line) {
+        // Split on unescaped '|' only
+        String[] p = line.split("(?<!\\\\)\\|", -1);
+        return new Attendance(
+                unescapeField(p[0]),
+                LocalDate.parse(p[1]),
+                AttendanceStatus.fromString(p[2]),
+                Double.parseDouble(p[3]),
+                p.length > 4 ? unescapeField(p[4]) : "");
+    }
+
+    private static String escapeField(String value) {
+        if (value == null)
+            return "";
+        return value.replace("\\", "\\\\").replace("|", "\\|");
+    }
+
+    private static String unescapeField(String value) {
+        if (value == null)
+            return "";
+        return value.replace("\\|", "|").replace("\\\\", "\\");
+    }
+}

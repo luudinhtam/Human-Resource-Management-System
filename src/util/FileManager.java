@@ -1,0 +1,78 @@
+package util;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Generic file manager using Java NIO.
+ * Reads and writes UTF-8 text files as lists of lines.
+ */
+public class FileManager {
+
+    private final String fileName;
+
+    public FileManager(String fileName) {
+        this.fileName = fileName;
+    }
+
+    // ── Read ──────────────────────────────────────────────────────────
+
+    /**
+     * Reads all lines from file.
+     * Returns empty list if file does not exist yet.
+     *
+     * @throws IOException if file exists but cannot be read
+     */
+    public List<String> readLines() throws IOException {
+        File file = new File(fileName);
+        if (!file.exists()) return new ArrayList<String>();
+        return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+    }
+
+    // ── Write ─────────────────────────────────────────────────────────
+
+    /**
+     * Writes a list of lines to file, each separated by newline.
+     * Creates parent directories automatically if they don't exist.
+     *
+     * @throws IOException if file cannot be written
+     */
+    public void writeLines(List<String> lines) throws IOException {
+        ensureDirectory();
+        String data = String.join("\n", lines);
+        Files.write(toPath(), data.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Writes raw string content to file.
+     * Creates parent directories automatically if they don't exist.
+     *
+     * @throws IOException if file cannot be written
+     */
+    public void writeContent(String content) throws IOException {
+        ensureDirectory();
+        Files.write(toPath(), content.getBytes(StandardCharsets.UTF_8));
+    }
+
+    // ── Helper ────────────────────────────────────────────────────────
+
+    public String getFileName() { return fileName; }
+
+    private Path toPath() {
+        return new File(fileName).toPath();
+    }
+
+    private void ensureDirectory() throws IOException {
+        File parent = new File(fileName).getParentFile();
+        if (parent != null && !parent.exists()) {
+            if (!parent.mkdirs()) {
+                throw new IOException("Cannot create directory: " + parent.getPath());
+            }
+        }
+    }
+}
