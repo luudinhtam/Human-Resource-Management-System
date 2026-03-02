@@ -1,5 +1,6 @@
 package dao.interfaces;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
@@ -7,19 +8,19 @@ import java.util.function.Predicate;
 import entity.Attendance;
 
 public interface IAttendanceDAO {
-    void add(Attendance attendance) throws Exception;
+    void add(Attendance attendance) throws IOException;
 
-    void update(Attendance attendance) throws Exception;
+    void update(Attendance attendance) throws IOException;
 
-    List<Attendance> findByEmployeeId(String employeeId) throws Exception;
+    List<Attendance> findByEmployeeId(String employeeId) throws IOException;
 
-    Attendance findByEmployeeIdAndDate(String employeeId, LocalDate date) throws Exception;
+    Attendance findByEmployeeIdAndDate(String employeeId, LocalDate date) throws IOException;
 
-    List<Attendance> findAll() throws Exception;
+    List<Attendance> findAll() throws IOException;
 
-    boolean existsByEmployeeIdAndDate(String employeeId, LocalDate date) throws Exception;
+    boolean existsByEmployeeIdAndDate(String employeeId, LocalDate date) throws IOException;
 
-    List<Attendance> search(Predicate<Attendance> predicate) throws Exception;
+    List<Attendance> search(Predicate<Attendance> predicate) throws IOException;
 
-    void saveToFile() throws Exception;
+    void saveToFile() throws IOException;
 }

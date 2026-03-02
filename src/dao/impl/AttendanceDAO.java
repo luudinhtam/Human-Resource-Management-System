@@ -5,6 +5,7 @@ import entity.Attendance;
 // import model.AttendanceStatus;
 import util.FileManager;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public final class AttendanceDAO implements IAttendanceDAO {
     private final ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
     private final FileManager fileManager;
 
-    public AttendanceDAO() throws Exception {
+    public AttendanceDAO() throws IOException {
         this.fileManager = new FileManager(FILE_PATH);
         loadFromFile();
     }
@@ -25,13 +26,13 @@ public final class AttendanceDAO implements IAttendanceDAO {
     // ── CRUD ──────────────────────────────────────────────────────────
 
     @Override
-    public void add(Attendance attendance) throws Exception {
+    public void add(Attendance attendance) throws IOException {
         attendanceList.add(attendance);
         saveToFile();
     }
 
     @Override
-    public void update(Attendance updated) throws Exception {
+    public void update(Attendance updated) throws IOException {
         for (int i = 0; i < attendanceList.size(); i++) {
             Attendance a = attendanceList.get(i);
             if (a.getEmployeeId().equals(updated.getEmployeeId())
@@ -46,12 +47,12 @@ public final class AttendanceDAO implements IAttendanceDAO {
     // ── Queries ───────────────────────────────────────────────────────
 
     @Override
-    public List<Attendance> findByEmployeeId(String employeeId) throws Exception {
+    public List<Attendance> findByEmployeeId(String employeeId) throws IOException {
         return search(a -> a.getEmployeeId().equals(employeeId));
     }
 
     @Override
-    public Attendance findByEmployeeIdAndDate(String employeeId, LocalDate date) throws Exception {
+    public Attendance findByEmployeeIdAndDate(String employeeId, LocalDate date) throws IOException {
         for (Attendance a : attendanceList)
             if (a.getEmployeeId().equals(employeeId) && a.getDate().equals(date))
                 return a;
@@ -59,12 +60,12 @@ public final class AttendanceDAO implements IAttendanceDAO {
     }
 
     @Override
-    public List<Attendance> findAll() throws Exception {
+    public List<Attendance> findAll() throws IOException {
         return new ArrayList<Attendance>(attendanceList);
     }
 
     @Override
-    public boolean existsByEmployeeIdAndDate(String employeeId, LocalDate date) throws Exception {
+    public boolean existsByEmployeeIdAndDate(String employeeId, LocalDate date) throws IOException {
         return findByEmployeeIdAndDate(employeeId, date) != null;
     }
 
@@ -74,7 +75,7 @@ public final class AttendanceDAO implements IAttendanceDAO {
      * AttendanceStatus.ABSENT)
      */
     @Override
-    public List<Attendance> search(Predicate<Attendance> predicate) throws Exception {
+    public List<Attendance> search(Predicate<Attendance> predicate) throws IOException {
         List<Attendance> result = new ArrayList<Attendance>();
         for (Attendance a : attendanceList)
             if (predicate.test(a))
@@ -85,14 +86,14 @@ public final class AttendanceDAO implements IAttendanceDAO {
     // ── File I/O ──────────────────────────────────────────────────────
 
     @Override
-    public void saveToFile() throws Exception {
+    public void saveToFile() throws IOException {
         List<String> lines = new ArrayList<String>();
         for (Attendance a : attendanceList)
             lines.add(a.toString());
         fileManager.writeLines(lines);
     }
 
-    private void loadFromFile() throws Exception {
+    private void loadFromFile() throws IOException {
         attendanceList.clear();
         List<String> lines = fileManager.readLines();
         for (String line : lines) {

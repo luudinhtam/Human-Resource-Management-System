@@ -4,6 +4,7 @@ import dao.interfaces.ISalaryDAO;
 import entity.Salary;
 import util.FileManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -15,7 +16,7 @@ public final class SalaryDAO implements ISalaryDAO {
     private final ArrayList<Salary> salaryList = new ArrayList<Salary>();
     private final FileManager fileManager;
 
-    public SalaryDAO() throws Exception {
+    public SalaryDAO() throws IOException {
         this.fileManager = new FileManager(FILE_PATH);
         loadFromFile();
     }
@@ -23,7 +24,7 @@ public final class SalaryDAO implements ISalaryDAO {
     // ── CRUD ──────────────────────────────────────────────────────────
 
     @Override
-    public void save(Salary salary) throws Exception {
+    public void save(Salary salary) throws IOException {
         // Remove existing record for same employee + period (upsert)
         removeFromList(salary.getEmployeeId(), salary.getMonth(), salary.getYear());
         salaryList.add(salary);
@@ -31,7 +32,7 @@ public final class SalaryDAO implements ISalaryDAO {
     }
 
     @Override
-    public void deleteByEmployeeIdAndPeriod(String employeeId, int month, int year) throws Exception {
+    public void deleteByEmployeeIdAndPeriod(String employeeId, int month, int year) throws IOException {
         boolean removed = removeFromList(employeeId, month, year);
         if (removed)
             saveToFile();
@@ -40,7 +41,7 @@ public final class SalaryDAO implements ISalaryDAO {
     // ── Queries ───────────────────────────────────────────────────────
 
     @Override
-    public Salary findByEmployeeIdAndPeriod(String employeeId, int month, int year) throws Exception {
+    public Salary findByEmployeeIdAndPeriod(String employeeId, int month, int year) throws IOException {
         for (Salary s : salaryList)
             if (s.getEmployeeId().equals(employeeId)
                     && s.getMonth() == month
@@ -50,12 +51,12 @@ public final class SalaryDAO implements ISalaryDAO {
     }
 
     @Override
-    public List<Salary> findByPeriod(int month, int year) throws Exception {
+    public List<Salary> findByPeriod(int month, int year) throws IOException {
         return search(s -> s.getMonth() == month && s.getYear() == year);
     }
 
     @Override
-    public List<Salary> findAll() throws Exception {
+    public List<Salary> findAll() throws IOException {
         return new ArrayList<Salary>(salaryList);
     }
 
@@ -64,7 +65,7 @@ public final class SalaryDAO implements ISalaryDAO {
      * Example: search(s -> s.getTotalSalary() > 20_000_000)
      */
     @Override
-    public List<Salary> search(Predicate<Salary> predicate) throws Exception {
+    public List<Salary> search(Predicate<Salary> predicate) throws IOException {
         List<Salary> result = new ArrayList<Salary>();
         for (Salary s : salaryList)
             if (predicate.test(s))
@@ -75,14 +76,14 @@ public final class SalaryDAO implements ISalaryDAO {
     // ── File I/O ──────────────────────────────────────────────────────
 
     @Override
-    public void saveToFile() throws Exception {
+    public void saveToFile() throws IOException {
         List<String> lines = new ArrayList<String>();
         for (Salary s : salaryList)
             lines.add(s.toString());
         fileManager.writeLines(lines);
     }
 
-    private void loadFromFile() throws Exception {
+    private void loadFromFile() throws IOException {
         salaryList.clear();
         List<String> lines = fileManager.readLines();
         for (String line : lines) {
