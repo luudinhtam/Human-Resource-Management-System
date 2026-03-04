@@ -19,6 +19,8 @@ public interface IEmployeeDAO {
 
     boolean existsById(String employeeId) throws IOException;
 
+    // Predicate<T> is a functional interface in Java. It represents a condition
+    // that takes an object of type T as input and returns true or false.
     List<Employee> search(Predicate<Employee> predicate) throws IOException;
 
     void saveToFile() throws IOException;

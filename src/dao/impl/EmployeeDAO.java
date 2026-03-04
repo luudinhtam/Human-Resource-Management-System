@@ -90,9 +90,13 @@ public final class EmployeeDAO implements IEmployeeDAO {
      */
     @Override
     public List<Employee> search(Predicate<Employee> predicate) throws IOException {
+        //Creat a new array list to save the result
+        //List is an interface, ArrayList is an implementation of List
         List<Employee> result = new ArrayList<Employee>();
         for (Employee e : employeeList)
+            //Check every Employee that matches to the Predicate
             if (predicate.test(e))
+                //If it does, add the Employee
                 result.add(e);
         return result;
     }

@@ -1,6 +1,6 @@
 # Human Resource Management System
 
-A console-based Java application for managing employees, attendance, salary calculation, and HR reports.
+A console-based **Java** application for managing employees, attendance, salary calculation, and HR reports.
 The system follows a layered architecture (UI → Manager → DAO → File Storage) and uses file-based persistence.
 
 ## Description
@@ -83,7 +83,7 @@ This project demonstrates:
 
 ## Learning Objectives
 
-- This project demonstrates:
+This project demonstrates:
 
 - Clean code organization
 
