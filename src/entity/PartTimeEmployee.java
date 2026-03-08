@@ -44,6 +44,6 @@ public class PartTimeEmployee extends Employee {
     /** Appends hoursPerWeek to base format */
     @Override
     public String toString() {
-        return super.toString() + "|" + hoursPerWeek;
+        return super.toString() + "," + hoursPerWeek;
     }
 }

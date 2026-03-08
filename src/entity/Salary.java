@@ -84,19 +84,19 @@ public class Salary {
 
     /**
      * Format:
-     * employeeId|month|year|basicSalary|overtimePay|absenceDeduction|workingDays|absentDays|overtimeHours
+     * employeeId,month,year,basicSalary,overtimePay,absenceDeduction,workingDays,absentDays,overtimeHours
      */
     @Override
     public String toString() {
-        return escapeField(employeeId) + "|" + month + "|" + year + "|"
-                + basicSalary + "|" + overtimePay + "|" + absenceDeduction + "|"
-                + workingDays + "|" + absentDays + "|" + overtimeHours;
+        return employeeId + "," + month + "," + year + ","
+                + basicSalary + "," + overtimePay + "," + absenceDeduction + ","
+                + workingDays + "," + absentDays + "," + overtimeHours;
     }
 
     public static Salary fromString(String line) {
-        String[] p = line.split("\\|");
+        String[] p = line.split("\\,");
         return new Salary(
-                unescapeField(p[0]),
+                p[0],
                 Integer.parseInt(p[1]),
                 Integer.parseInt(p[2]),
                 Double.parseDouble(p[3]),
@@ -107,15 +107,4 @@ public class Salary {
                 Integer.parseInt(p[8]));
     }
 
-    private static String escapeField(String value) {
-        if (value == null)
-            return "";
-        return value.replace("\\", "\\\\").replace("|", "\\|");
-    }
-
-    private static String unescapeField(String value) {
-        if (value == null)
-            return "";
-        return value.replace("\\|", "|").replace("\\\\", "\\");
-    }
 }

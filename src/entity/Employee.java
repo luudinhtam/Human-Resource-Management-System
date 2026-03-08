@@ -102,29 +102,17 @@ public abstract class Employee {
         System.out.printf("%-20s: %s%n", "Status", status);
     }
 
-    /** Format: id|name|dept|jobTitle|dateJoined|basicSalary|status|type */
+    /** Format: id,name,dept,jobTitle,dateJoined,basicSalary,status,type */
     @Override
     public String toString() {
-        return escapeField(employeeId) + "|"
-                + escapeField(name) + "|"
-                + escapeField(department) + "|"
-                + escapeField(jobTitle) + "|"
-                + dateOfJoining + "|"
-                + basicSalary + "|"
-                + status + "|"
+        return employeeId + ","
+                + name + ","
+                + department + ","
+                + jobTitle + ","
+                + dateOfJoining + ","
+                + basicSalary + ","
+                + status + ","
                 + type;
     }
 
-    // ── Pipe-safe escaping ────────────────────────────────────────────
-    protected static String escapeField(String value) {
-        if (value == null)
-            return "";
-        return value.replace("\\", "\\\\").replace("|", "\\|");
-    }
-
-    protected static String unescapeField(String value) {
-        if (value == null)
-            return "";
-        return value.replace("\\|", "|").replace("\\\\", "\\");
-    }
 }

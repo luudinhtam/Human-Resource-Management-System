@@ -20,7 +20,16 @@ public class Attendance {
         this.date = date;
         this.status = status;
         this.overtimeHours = overtimeHours;
-        this.note = note == null ? "" : note;
+        this.note = note == null ? "" : note; // ternary operator
+        // note is OPTIONAL, we have to check whether user input note or not
+        /*
+         * Same meaning but longer
+         * if (note == null) {
+         * this.note = "";
+         * } else {
+         * this.note = note;
+         * }
+         */
     }
 
     // ── Getters ──────────────────────────────────────────────────────
@@ -55,44 +64,54 @@ public class Attendance {
 
     public void setNote(String note) {
         this.note = note == null ? "" : note;
+        /*
+         * if (note == null) {
+         * this.note = "";
+         * } else {
+         * this.note = note;
+         * }
+         */
     }
 
     public void displayInfo() {
-        System.out.printf("  %s | %-8s | Overtime: %.1f hrs | Note: %s%n",
+        System.out.printf("  %s , %-8s , Overtime: %.1f hrs , Note: %s%n",
                 date, status, overtimeHours, note);
     }
 
     // ── Serialization ─────────────────────────────────────────────────
-    /** Format: employeeId|date|status|overtimeHours|note */
+    /** Format: employeeId,date,status,overtimeHours,note */
+    // toString is used to FORMAT data before WRITE to a FILE
     @Override
     public String toString() {
-        return escapeField(employeeId) + "|"
-                + date + "|"
-                + status + "|"
-                + overtimeHours + "|"
-                + escapeField(note);
+        return employeeId + ","
+                + date + ","
+                + status + ","
+                + overtimeHours + ","
+                + note;
     }
 
+    // fromString is used to UNFORMAT data from a FILE
     public static Attendance fromString(String line) {
         // Split on unescaped '|' only
-        String[] p = line.split("(?<!\\\\)\\|", -1);
+        String[] p = line.split("(?<!\\\\)\\,", -1);
+        /*
+         * Example
+         * // "EMP001|2024-01-15|PRESENT|2.0|Worked late"
+         * String[] p = line.split("(?<!\\\\)\\|", -1); 
+         * // p[0] = "EMP001"
+         * // p[1] = "2024-01-15"
+         * // p[2] = "PRESENT"
+         * // p[3] = "2.0"
+         * // p[4] = "Worked late"
+         */
+        // Create object Attendance with these data
         return new Attendance(
-                unescapeField(p[0]),
+                p[0],
                 LocalDate.parse(p[1]),
                 AttendanceStatus.fromString(p[2]),
                 Double.parseDouble(p[3]),
-                p.length > 4 ? unescapeField(p[4]) : "");
-    }
-
-    private static String escapeField(String value) {
-        if (value == null)
-            return "";
-        return value.replace("\\", "\\\\").replace("|", "\\|");
-    }
-
-    private static String unescapeField(String value) {
-        if (value == null)
-            return "";
-        return value.replace("\\|", "|").replace("\\\\", "\\");
+                p.length > 4 ? p[4] : ""
+            );
+        // When user input NOTE, p.length > 4 (p.length == 5)
     }
 }
