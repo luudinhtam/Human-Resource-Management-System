@@ -32,16 +32,16 @@ public final class SalaryDAO implements ISalaryDAO {
     }
 
     @Override
-    public void deleteByEmployeeIdAndPeriod(String employeeId, int month, int year) throws IOException {
+    public void deleteByPeriod(String employeeId, int month, int year) throws IOException {
         boolean removed = removeFromList(employeeId, month, year);
-        if (removed)
+        if (removed == true)
             saveToFile();
     }
 
     // ── Queries ───────────────────────────────────────────────────────
 
     @Override
-    public Salary findByEmployeeIdAndPeriod(String employeeId, int month, int year) throws IOException {
+    public Salary findByEmployeeAndPeriod(String employeeId, int month, int year) throws IOException {
         for (Salary s : salaryList)
             if (s.getEmployeeId().equals(employeeId)
                     && s.getMonth() == month

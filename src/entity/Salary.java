@@ -11,11 +11,11 @@ public class Salary {
     private double totalSalary;
     private int workingDays;
     private int absentDays;
-    private int overtimeHours;
+    private double overtimeHours;
 
     public Salary(String employeeId, int month, int year,
             double basicSalary, double overtimePay, double absenceDeduction,
-            int workingDays, int absentDays, int overtimeHours) {
+            int workingDays, int absentDays, double overtimeHours) {
         this.employeeId = employeeId;
         this.month = month;
         this.year = year;
@@ -65,7 +65,7 @@ public class Salary {
         return absentDays;
     }
 
-    public int getOvertimeHours() {
+    public double getOvertimeHours() {
         return overtimeHours;
     }
 

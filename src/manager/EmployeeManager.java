@@ -6,6 +6,7 @@ import entity.EmployeeStatus;
 import exception.DuplicateEmployeeException;
 import exception.EmployeeNotFoundException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -15,6 +16,11 @@ public class EmployeeManager {
 
     public EmployeeManager(IEmployeeDAO employeeDAO) {
         this.employeeDAO = employeeDAO;
+    }
+
+    public String getEmployeeName(String employeeId) throws IOException {
+        Employee e = employeeDAO.findById(employeeId);
+        return e != null ? e.getName() : "N/A";
     }
 
     // ── BR1: ID unique ────────────────────────────────────────────────
@@ -79,7 +85,7 @@ public class EmployeeManager {
     /** Flexible search — supports any combination of conditions via Predicate */
     public List<Employee> search(Predicate<Employee> predicate) throws Exception {
         return employeeDAO.search(predicate);
-        //It returns a List, an interface, not an ArrayList
+        // It returns a List, an interface, not an ArrayList
     }
 
     public List<Employee> findByName(String name) throws Exception {
@@ -95,7 +101,8 @@ public class EmployeeManager {
 
         // Same meaning but longer, we use lambda for short
 
-        // Predicate<Employee> predicate = e -> e.getDepartment().equalsIgnoreCase(department);
+        // Predicate<Employee> predicate = e ->
+        // e.getDepartment().equalsIgnoreCase(department);
         // return search(predicate);
     }
 

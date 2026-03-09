@@ -27,7 +27,7 @@ public class MenuUI {
         // Inject DAOs into Managers
         EmployeeManager employeeManager = new EmployeeManager(new EmployeeDAO());
         AttendanceManager attendanceManager = new AttendanceManager(new AttendanceDAO(), employeeManager);
-        SalaryManager salaryManager = new SalaryManager(new SalaryDAO());
+        SalaryManager salaryManager = new SalaryManager(new SalaryDAO(), employeeManager);
         ReportManager reportManager = new ReportManager(employeeManager, attendanceManager, salaryManager);
 
         this.employeeMenu = new EmployeeMenuUI(employeeManager, console);

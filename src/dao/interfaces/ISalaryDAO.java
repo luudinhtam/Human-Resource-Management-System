@@ -9,9 +9,9 @@ import entity.Salary;
 public interface ISalaryDAO {
     void save(Salary salary) throws IOException;
 
-    void deleteByEmployeeIdAndPeriod(String employeeId, int month, int year) throws IOException;
+    void deleteByPeriod(String employeeId, int month, int year) throws IOException;
 
-    Salary findByEmployeeIdAndPeriod(String employeeId, int month, int year) throws IOException;
+    Salary findByEmployeeAndPeriod(String employeeId, int month, int year) throws IOException;
 
     List<Salary> findByPeriod(int month, int year) throws IOException;
 
