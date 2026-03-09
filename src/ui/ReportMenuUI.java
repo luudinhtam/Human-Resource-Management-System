@@ -18,11 +18,11 @@ public class ReportMenuUI {
     public void show() throws Exception {
         boolean back = false;
         while (!back) {
-            System.out.println("\n------ REPORTS ------");
+            System.out.println("\n===== REPORTS =====");
             System.out.println("  1. Low attendance employees");
             System.out.println("  2. Highest paid employees");
             System.out.println("  0. Back");
-            System.out.println("---------------------");
+            System.out.println("=========================");
             int choice = console.readInt("Select: ");
             try {
                 switch (choice) {
@@ -47,19 +47,29 @@ public class ReportMenuUI {
     // ── Actions ───────────────────────────────────────────────────────
 
     private void reportLowAttendance() throws Exception {
-        int month = console.readInt("Month (1-12) : ");
-        int year = console.readInt("Year         : ");
+        // Input
+        int month = console.readInt("Month (1-12): ");
+        int year = console.readInt("Year: ");
+
+        // Validate
         InputValidator.validateMonth(month);
         InputValidator.validateYear(year);
+
+        //
         reportManager.printLowAttendanceReport(month, year);
     }
 
     private void reportHighestPaid() throws Exception {
-        int month = console.readInt("Month (1-12) : ");
-        int year = console.readInt("Year         : ");
-        int topN = console.readInt("Top N        : ");
+        // Input
+        int month = console.readInt("Month (1-12): ");
+        int year = console.readInt("Year: ");
+        int topN = console.readInt("Top N: ");
+
+        // Validate
         InputValidator.validateMonth(month);
         InputValidator.validateYear(year);
+
+        //
         reportManager.printHighestPaidReport(month, year, topN);
     }
 }
