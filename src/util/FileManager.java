@@ -30,7 +30,12 @@ public class FileManager {
      */
     public List<String> readLines() throws IOException {
         File file = new File(fileName);
-        if (!file.exists()) return new ArrayList<String>();
+
+        // Check file exists
+        if (!file.exists())
+            return new ArrayList<String>(); // Return empty list
+
+        // Read the entire file, each line is a element in list
         return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
     }
 
@@ -61,7 +66,9 @@ public class FileManager {
 
     // ── Helper ────────────────────────────────────────────────────────
 
-    public String getFileName() { return fileName; }
+    public String getFileName() {
+        return fileName;
+    }
 
     private Path toPath() {
         return new File(fileName).toPath();
