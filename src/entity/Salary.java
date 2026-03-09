@@ -94,7 +94,7 @@ public class Salary {
     }
 
     public static Salary fromString(String line) {
-        String[] p = line.split("\\,");
+        String[] p = line.split(",");
         return new Salary(
                 p[0],
                 Integer.parseInt(p[1]),

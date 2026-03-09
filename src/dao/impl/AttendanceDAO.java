@@ -2,7 +2,7 @@ package dao.impl;
 
 import dao.interfaces.IAttendanceDAO;
 import entity.Attendance;
-// import model.AttendanceStatus;
+// import entity.AttendanceStatus;
 import util.FileManager;
 
 import java.io.IOException;
@@ -33,11 +33,14 @@ public final class AttendanceDAO implements IAttendanceDAO {
 
     @Override
     public void update(Attendance updated) throws IOException {
+        //Loop through all the List
         for (int i = 0; i < attendanceList.size(); i++) {
             Attendance a = attendanceList.get(i);
+            //Key: (id, date)
             if (a.getEmployeeId().equals(updated.getEmployeeId())
                     && a.getDate().equals(updated.getDate())) {
-                attendanceList.set(i, updated);
+                //replace an old record by a new record
+                attendanceList.set(i, updated); 
                 saveToFile();
                 return;
             }
@@ -52,11 +55,14 @@ public final class AttendanceDAO implements IAttendanceDAO {
     }
 
     @Override
+    // For one specific employee
     public Attendance findByEmployeeIdAndDate(String employeeId, LocalDate date) throws IOException {
         for (Attendance a : attendanceList)
             if (a.getEmployeeId().equals(employeeId) && a.getDate().equals(date))
                 return a;
         return null;
+        //It is better than search(Predicate)
+        //search() is suitable for finding many results
     }
 
     @Override

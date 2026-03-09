@@ -90,15 +90,23 @@ public final class EmployeeDAO implements IEmployeeDAO {
      */
     @Override
     public List<Employee> search(Predicate<Employee> predicate) throws IOException {
-        //Creat a new array list to save the result
-        //List is an interface, ArrayList is an implementation of List
-        List<Employee> result = new ArrayList<Employee>();
+        // Creat a new array list to save the result
+        // List is an interface, ArrayList is an implementation of List
+
+        List<Employee> result = new ArrayList<Employee>(); // Creating ArrayList here
         for (Employee e : employeeList)
-            //Check every Employee that matches to the Predicate
+            // Check every Employee that matches to the Predicate
             if (predicate.test(e))
-                //If it does, add the Employee
                 result.add(e);
-        return result;
+        return result; // Return ArrayList, but we assigned as List
+
+        // Why assigning List instead of ArrayList ? More flexible
+        // public ArrayList<Employee> search(...)
+        // If we assign ArrayList, in the future, we can change to LinkedList or
+        // another, we have to change our code
+        // Caller (findByDepartment, findByName...) only know "recieve a List", dont
+        // care about what's in it.
+
     }
 
     // ── File I/O ──────────────────────────────────────────────────────

@@ -23,13 +23,14 @@ public class AttendanceMenuUI {
     public void show() throws Exception {
         boolean back = false;
         while (!back) {
-            System.out.println("\n------ ATTENDANCE MANAGEMENT ------");
+            System.out.println("\n===== ATTENDANCE MANAGEMENT =====");
             System.out.println("  1. Record attendance");
             System.out.println("  2. Update attendance");
             System.out.println("  3. View attendance history");
             System.out.println("  4. View monthly summary");
             System.out.println("  0. Back");
-            System.out.println("-----------------------------------");
+            System.out.println("===================================");
+
             int choice = console.readInt("Select: ");
             try {
                 switch (choice) {
@@ -59,75 +60,100 @@ public class AttendanceMenuUI {
 
     // ── Actions ───────────────────────────────────────────────────────
 
+    // ========== ADD ==========
     private void recordAttendance() throws Exception {
-        String id = console.readString("Employee ID         : ");
-        String dateStr = console.readString("Date (yyyy-MM-dd)   : ");
+        // ID
+        String id = console.readString("Employee ID: ");
+
+        // Date
+        String dateStr = console.readString("Date (yyyy-MM-dd): ");
         LocalDate date = InputValidator.validateDate(dateStr);
 
+        // Status
         System.out.println("Status: PRESENT / ABSENT / LEAVE");
-        AttendanceStatus status = InputValidator.validateAttendanceStatus(
-                console.readString("Status              : "));
+        AttendanceStatus status = InputValidator.validateAttendanceStatus(console.readString("Status: "));
 
+        // Overtime (If status is PRESENT)
         double overtime = 0;
         if (status == AttendanceStatus.PRESENT) {
-            overtime = InputValidator.validatePositiveDouble(
-                    console.readString("Overtime hours (0 if none): "), "Overtime hours");
+            overtime = InputValidator.validatePositiveDouble(console.readString("Overtime hours (0 if none): "),
+                    "Overtime hours");
             InputValidator.validateOvertimeHours(overtime);
         }
 
-        String note = console.readString("Note (optional)     : ");
+        String note = console.readString("Note (optional): ");
+        // Create a new Attendance Object
         attendanceManager.recordAttendance(new Attendance(id, date, status, overtime, note));
     }
 
+    // ========== UPDATE ==========
     private void updateAttendance() throws Exception {
-        String id = console.readString("Employee ID       : ");
-        String dateStr = console.readString("Date (yyyy-MM-dd) : ");
+        // ID
+        String id = console.readString("Employee ID: ");
+
+        // Date
+        String dateStr = console.readString("Date (yyyy-MM-dd): ");
         LocalDate date = InputValidator.validateDate(dateStr);
 
+        // Status
         System.out.println("New Status: PRESENT / ABSENT / LEAVE");
-        AttendanceStatus status = InputValidator.validateAttendanceStatus(
-                console.readString("Status            : "));
+        AttendanceStatus status = InputValidator.validateAttendanceStatus(console.readString("Status: "));
 
+        // Overtime
         double overtime = 0;
         // Only ask for overtime when status is PRESENT
         if (status == AttendanceStatus.PRESENT) {
-            overtime = InputValidator.validatePositiveDouble(
-                    console.readString("Overtime hours    : "), "Overtime hours");
+            overtime = InputValidator.validatePositiveDouble(console.readString("Overtime hours: "), "Overtime hours");
             InputValidator.validateOvertimeHours(overtime);
         }
 
+        // Update Attendance Object
         attendanceManager.updateAttendance(id, date, status, overtime);
     }
 
+    // // ========== VIEW ==========
     private void viewAttendanceHistory() throws Exception {
+        // ID
         String id = console.readString("Employee ID: ");
-        List<Attendance> list = attendanceManager.getAttendanceByEmployee(id);
+
+        // Search a list of employee's attendence records by ID
+        List<Attendance> list = attendanceManager.getAttendanceByEmployeeId(id); // getAttendanceByEmployeeId
         if (list.isEmpty()) {
-            System.out.println("No records found.");
+            System.out.println("No records found!. Please try again");
             return;
         }
-        System.out.println("\n--- Attendance History: " + id + " ---");
+
+        System.out.println("\n===== Attendance History with ID: " + id + " =====");
         for (Attendance a : list)
             a.displayInfo();
     }
 
     private void viewMonthlySummary() throws Exception {
-        String id = console.readString("Employee ID  : ");
-        int month = console.readInt("Month (1-12) : ");
-        int year = console.readInt("Year         : ");
+        // ID
+        String id = console.readString("Employee ID: ");
+
+        // Month
+        int month = console.readInt("Month (1-12): ");
+
+        // Year
+        int year = console.readInt("Year: ");
+
+        //Validate
         InputValidator.validateMonth(month);
         InputValidator.validateYear(year);
 
+        //AttendanceSummary to get all info (Working days, absent days, overtime hours)
         AttendanceManager.AttendanceSummary summary = attendanceManager.getMonthlySummary(id, month, year);
 
-        System.out.println("\n--- Monthly Summary: " + id
-                + " " + String.format("%02d/%d", month, year) + " ---");
+        System.out.println("\n===== Monthly Summary: " + id + " " + String.format("%02d/%d", month, year) + " =====");
+        // %02d/%d => month = 1, year = 2024 => "01/2024"
+
         System.out.printf("%-20s: %d%n", "Working days", summary.workingDays);
         System.out.printf("%-20s: %d%n", "Absent days", summary.absentDays);
         System.out.printf("%-20s: %d%n", "Overtime hours", summary.overtimeHours);
 
         System.out.println("Details:");
-        for (Attendance a : attendanceManager.getAttendanceByMonth(id, month, year))
+        for (Attendance a : attendanceManager.getMonthlyAttendance(id, month, year))
             a.displayInfo();
     }
 }

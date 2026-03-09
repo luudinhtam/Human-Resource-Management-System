@@ -79,20 +79,22 @@ public class EmployeeManager {
     /** Flexible search — supports any combination of conditions via Predicate */
     public List<Employee> search(Predicate<Employee> predicate) throws Exception {
         return employeeDAO.search(predicate);
+        //It returns a List, an interface, not an ArrayList
     }
 
     public List<Employee> findByName(String name) throws Exception {
-        //We pass the Predicate as argument to the method search(), 
+        // We pass the Predicate as argument to the method search(),
         return search(e -> e.getName().toLowerCase().contains(name.toLowerCase()));
 
-        //This is a Predicate (Condition) but in shorter way by using Lambda
-        //e -> e.getName().toLowerCase().contains(name.toLowerCase()) 
+        // This is a Predicate (Condition) but in shorter way by using Lambda
+        // e -> e.getName().toLowerCase().contains(name.toLowerCase())
     }
 
     public List<Employee> findByDepartment(String department) throws Exception {
         return search(e -> e.getDepartment().equalsIgnoreCase(department));
 
-        //Same meaning but longer
+        // Same meaning but longer, we use lambda for short
+
         // Predicate<Employee> predicate = e -> e.getDepartment().equalsIgnoreCase(department);
         // return search(predicate);
     }
@@ -107,6 +109,9 @@ public class EmployeeManager {
 
     public List<Employee> getActiveEmployees() throws Exception {
         return search(Employee::isActive);
+        // return search(e -> e.isActive());
+        // Same meaning but shorter for only calling ONE method
+        // But we have to use lambda when it has more complex logic.
     }
 
     public boolean exists(String employeeId) throws Exception {

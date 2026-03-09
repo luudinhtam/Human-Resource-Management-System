@@ -18,80 +18,108 @@ public class AttendanceManager {
 
     public AttendanceManager(IAttendanceDAO attendanceDAO, EmployeeManager employeeManager) {
         this.attendanceDAO = attendanceDAO;
-        this.employeeManager = employeeManager;
+        this.employeeManager = employeeManager; // Use some methods to check info (ID)
     }
 
-    // ── BR3, BR4 ──────────────────────────────────────────────────────
+    // BR3, BR4
+
+    // ========== ADD ==========
     public void recordAttendance(Attendance attendance) throws Exception {
+        // ID
         String id = attendance.getEmployeeId();
 
+        // Check for ID
         if (!employeeManager.exists(id))
             throw new EmployeeNotFoundException(id);
 
+        // Check for ID and Date
         if (attendanceDAO.existsByEmployeeIdAndDate(id, attendance.getDate()))
             throw new DuplicateAttendanceException(id, attendance.getDate().toString());
 
+        // ADD
         attendanceDAO.add(attendance);
         System.out.println("[SUCCESS] Attendance recorded for " + id
                 + " on " + attendance.getDate());
     }
 
+    // ========== UPDATE ==========
     public void updateAttendance(String employeeId, LocalDate date,
             AttendanceStatus status, double overtimeHours) throws Exception {
+
+        // requireRecord(): Check for Id and Date
         Attendance existing = requireRecord(employeeId, date);
+
         existing.setStatus(status);
         existing.setOvertimeHours(overtimeHours);
+
+        // Update
         attendanceDAO.update(existing);
         System.out.println("[SUCCESS] Attendance updated for " + employeeId + " on " + date);
     }
 
-    // ── Queries ───────────────────────────────────────────────────────
-    public List<Attendance> getAttendanceByEmployee(String employeeId) throws Exception {
+    // === Queries ===
+    // ========== VIEW ==========
+    // get Attendance By Employee Id
+    public List<Attendance> getAttendanceByEmployeeId(String employeeId) throws Exception {
         return attendanceDAO.findByEmployeeId(employeeId);
     }
 
-    public List<Attendance> getAttendanceByMonth(String employeeId, int month, int year) throws Exception {
+    // get all attendance records by Id, Month and Year
+    public List<Attendance> getMonthlyAttendance(String employeeId, int month, int year) throws Exception {
+
+        // Search with ID, month and year and return a List
         return attendanceDAO.search(
                 a -> a.getEmployeeId().equals(employeeId)
                         && a.getDate().getMonthValue() == month
                         && a.getDate().getYear() == year);
     }
 
-    /**
-     * Single-pass summary — avoids traversing the attendance list 3 times
-     * separately
-     */
+    
     public AttendanceSummary getMonthlySummary(String employeeId, int month, int year) throws Exception {
         int workingDays = 0;
         int absentDays = 0;
         double overtime = 0;
 
+        // Check for ID
         for (Attendance a : attendanceDAO.findByEmployeeId(employeeId)) {
+
+            // Check for correct Month and Year
             if (a.getDate().getMonthValue() != month || a.getDate().getYear() != year)
                 continue;
+
+            // Only records have correct Month and Year
             switch (a.getStatus()) {
                 case PRESENT:
                     workingDays++;
                     overtime += a.getOvertimeHours();
                     break;
+
                 case ABSENT:
                     absentDays++;
                     break;
-                default:
+
+                default: // Leave: Not count
                     break;
             }
         }
-        return new AttendanceSummary(workingDays, absentDays, (int) overtime);
+        return new AttendanceSummary(workingDays, absentDays, overtime);
     }
 
-    // We have to call getMonthlySummary 3 times if we need 3 atributes. We have to
-    // fix ^^
+    // public int countWorkingDays(String employeeId, int month, int year) {
+    //     int count = 0;
+    //     for (Attendance a : attendanceDAO.findByEmployeeId(employeeId))
+    //         if (a.getDate().getMonthValue() == month && a.getDate().getYear() == year)
+    //             if (a.getStatus() == AttendanceStatus.PRESENT)
+    //                 count++;
+    //     return count;
+    // }
 
     /*
-     * ===WARNING===
+     * === WARNING ===
      * If you only need one number, use the methods below.
      * If you need more than one, call getMonthlySummary() directly.
      */
+
     public int countWorkingDays(String employeeId, int month, int year) throws Exception {
         return getMonthlySummary(employeeId, month, year).workingDays;
     }
@@ -100,11 +128,11 @@ public class AttendanceManager {
         return getMonthlySummary(employeeId, month, year).absentDays;
     }
 
-    public int getTotalOvertimeHours(String employeeId, int month, int year) throws Exception {
+    public double getTotalOvertimeHours(String employeeId, int month, int year) throws Exception {
         return getMonthlySummary(employeeId, month, year).overtimeHours;
     }
 
-    // ── Helper ────────────────────────────────────────────────────────
+    // ========== HELPER ==========
     private Attendance requireRecord(String employeeId, LocalDate date) throws Exception {
         Attendance a = attendanceDAO.findByEmployeeIdAndDate(employeeId, date);
         if (a == null)
@@ -112,13 +140,13 @@ public class AttendanceManager {
         return a;
     }
 
-    // ── Inner class: immutable summary result ─────────────────────────
+    // Inner class: immutable summary result
     public static class AttendanceSummary {
         public final int workingDays;
         public final int absentDays;
-        public final int overtimeHours;
+        public final double overtimeHours;
 
-        public AttendanceSummary(int workingDays, int absentDays, int overtimeHours) {
+        public AttendanceSummary(int workingDays, int absentDays, double overtimeHours) {
             this.workingDays = workingDays;
             this.absentDays = absentDays;
             this.overtimeHours = overtimeHours;

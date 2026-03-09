@@ -74,7 +74,7 @@ public class Attendance {
     }
 
     public void displayInfo() {
-        System.out.printf("  %s , %-8s , Overtime: %.1f hrs , Note: %s%n",
+        System.out.printf("  %s, %-8s, Overtime: %.1f hrs, Note: %s%n",
                 date, status, overtimeHours, note);
     }
 
@@ -92,12 +92,11 @@ public class Attendance {
 
     // fromString is used to UNFORMAT data from a FILE
     public static Attendance fromString(String line) {
-        // Split on unescaped '|' only
-        String[] p = line.split("(?<!\\\\)\\,", -1);
+        String[] p = line.split(",", -1);
         /*
          * Example
-         * // "EMP001|2024-01-15|PRESENT|2.0|Worked late"
-         * String[] p = line.split("(?<!\\\\)\\|", -1); 
+         * // "EMP001,2024-01-15,PRESENT,2.0,Worked late"
+         * String[] p = line.split(",", -1); 
          * // p[0] = "EMP001"
          * // p[1] = "2024-01-15"
          * // p[2] = "PRESENT"
