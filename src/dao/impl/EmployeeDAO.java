@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 
 public final class EmployeeDAO implements IEmployeeDAO {
 
-    private static final String FILE_PATH = "data/employees.txt";
+    private static final String FILE_PATH = "employee.txt";
 
     private final ArrayList<Employee> employeeList = new ArrayList<Employee>();
     private final FileManager fileManager;

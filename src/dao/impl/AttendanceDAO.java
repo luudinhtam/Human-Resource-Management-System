@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 public final class AttendanceDAO implements IAttendanceDAO {
 
-    private static final String FILE_PATH = "data/attendance.txt";
+    private static final String FILE_PATH = "attendance.txt";
 
     private final ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
     private final FileManager fileManager;

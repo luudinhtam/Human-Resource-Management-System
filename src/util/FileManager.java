@@ -34,6 +34,9 @@ public class FileManager {
         // Check file exists
         if (!file.exists())
             return new ArrayList<String>(); // Return empty list
+        // Because the program runs first, the file hasn't been created yet — this is
+        // perfectly normal. Returning an empty list is handled automatically by
+        // LoadFromFile().
 
         // Read the entire file, each line is a element in list
         return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
@@ -48,9 +51,15 @@ public class FileManager {
      * @throws IOException if file cannot be written
      */
     public void writeLines(List<String> lines) throws IOException {
+        // Check the file exists
         ensureDirectory();
+
+        //
         String data = String.join("\n", lines);
+        
+        // UTF8 format
         Files.write(toPath(), data.getBytes(StandardCharsets.UTF_8));
+        // NO APPEND
     }
 
     /**
@@ -60,7 +69,10 @@ public class FileManager {
      * @throws IOException if file cannot be written
      */
     public void writeContent(String content) throws IOException {
+        //
         ensureDirectory();
+
+        //
         Files.write(toPath(), content.getBytes(StandardCharsets.UTF_8));
     }
 

@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 
 public final class SalaryDAO implements ISalaryDAO {
 
-    private static final String FILE_PATH = "data/salaries.txt";
+    private static final String FILE_PATH = "salary.txt";
 
     private final ArrayList<Salary> salaryList = new ArrayList<Salary>();
     private final FileManager fileManager;
