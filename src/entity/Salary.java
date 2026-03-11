@@ -104,7 +104,7 @@ public class Salary {
                 Double.parseDouble(p[5]),
                 Integer.parseInt(p[6]),
                 Integer.parseInt(p[7]),
-                Integer.parseInt(p[8]));
+                Double.parseDouble(p[8]));
     }
 
 }

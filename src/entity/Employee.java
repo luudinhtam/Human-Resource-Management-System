@@ -2,6 +2,8 @@ package entity;
 
 import java.time.LocalDate;
 
+import util.InputValidator;
+
 public abstract class Employee {
 
     private String employeeId;
@@ -97,7 +99,7 @@ public abstract class Employee {
         System.out.printf("%-20s: %s%n", "Type", type);
         System.out.printf("%-20s: %s%n", "Department", department);
         System.out.printf("%-20s: %s%n", "Job Title", jobTitle);
-        System.out.printf("%-20s: %s%n", "Date Joined", dateOfJoining);
+        System.out.printf("%-20s: %s%n", "Date Joined", InputValidator.formatDate(dateOfJoining));
         System.out.printf("%-20s: %,.0f VND%n", "Basic Salary", basicSalary);
         System.out.printf("%-20s: %s%n", "Status", status);
     }

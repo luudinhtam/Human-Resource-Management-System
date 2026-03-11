@@ -63,10 +63,10 @@ public class AttendanceMenuUI {
     // ========== ADD ==========
     private void recordAttendance() throws Exception {
         // ID
-        String id = console.readString("Employee ID: ");
+        String id = console.readString("Employee ID: ").trim().toUpperCase();
 
         // Date
-        String dateStr = console.readString("Date (yyyy-MM-dd): ");
+        String dateStr = console.readString("Date (dd/MM/yyyy): ");
         LocalDate date = InputValidator.validateDate(dateStr);
 
         // Status
@@ -89,10 +89,10 @@ public class AttendanceMenuUI {
     // ========== UPDATE ==========
     private void updateAttendance() throws Exception {
         // ID
-        String id = console.readString("Employee ID: ");
+        String id = console.readString("Employee ID: ").trim().toUpperCase();
 
         // Date
-        String dateStr = console.readString("Date (yyyy-MM-dd): ");
+        String dateStr = console.readString("Date (dd/MM/yyyy): ");
         LocalDate date = InputValidator.validateDate(dateStr);
 
         // Status
@@ -114,7 +114,7 @@ public class AttendanceMenuUI {
     // // ========== VIEW ==========
     private void viewAttendanceHistory() throws Exception {
         // ID
-        String id = console.readString("Employee ID: ");
+        String id = console.readString("Employee ID: ").trim().toUpperCase();
 
         // Search a list of employee's attendence records by ID
         List<Attendance> list = attendanceManager.getAttendanceByEmployeeId(id); // getAttendanceByEmployeeId
@@ -130,7 +130,7 @@ public class AttendanceMenuUI {
 
     private void viewMonthlySummary() throws Exception {
         // ID
-        String id = console.readString("Employee ID: ");
+        String id = console.readString("Employee ID: ").trim().toUpperCase();
 
         // Month
         int month = console.readInt("Month (1-12): ");
@@ -150,7 +150,7 @@ public class AttendanceMenuUI {
 
         System.out.printf("%-20s: %d%n", "Working days", summary.workingDays);
         System.out.printf("%-20s: %d%n", "Absent days", summary.absentDays);
-        System.out.printf("%-20s: %d%n", "Overtime hours", summary.overtimeHours);
+        System.out.printf("%-20s: %.1f%n", "Overtime hours", summary.overtimeHours);
 
         System.out.println("Details:");
         for (Attendance a : attendanceManager.getMonthlyAttendance(id, month, year))

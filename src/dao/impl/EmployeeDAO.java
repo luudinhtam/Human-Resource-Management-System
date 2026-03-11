@@ -140,11 +140,11 @@ public final class EmployeeDAO implements IEmployeeDAO {
      */
     private Employee parseLine(String line) {
         try {
-            String[] p = line.split("(?<!\\\\)\\|", -1);
-            String id = unescapeField(p[0]);
-            String name = unescapeField(p[1]);
-            String dept = unescapeField(p[2]);
-            String title = unescapeField(p[3]);
+            String[] p = line.split(",", -1);
+            String id = p[0];
+            String name = p[1];
+            String dept = p[2];
+            String title = p[3];
             LocalDate date = LocalDate.parse(p[4]);
             double salary = Double.parseDouble(p[5]);
             EmployeeStatus status = EmployeeStatus.fromString(p[6]);
