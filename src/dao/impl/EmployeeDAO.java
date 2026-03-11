@@ -134,17 +134,18 @@ public final class EmployeeDAO implements IEmployeeDAO {
 
     /**
      * Format (FullTime) :
-     * id|name|dept|jobTitle|dateJoined|basicSalary|status|FULL_TIME
+     * id,name,dept,jobTitle,dateJoined,basicSalary,status,FULL_TIME
+     * 
      * Format (PartTime) :
-     * id|name|dept|jobTitle|dateJoined|basicSalary|status|PART_TIME|hoursPerWeek
+     * id,name,dept,jobTitle,dateJoined,basicSalary,status,PART_TIME,hoursPerWeek
      */
     private Employee parseLine(String line) {
         try {
-            String[] p = line.split("(?<!\\\\)\\|", -1);
-            String id = unescapeField(p[0]);
-            String name = unescapeField(p[1]);
-            String dept = unescapeField(p[2]);
-            String title = unescapeField(p[3]);
+            String[] p = line.split(",", -1);
+            String id = p[0];
+            String name = p[1];
+            String dept = p[2];
+            String title = p[3];
             LocalDate date = LocalDate.parse(p[4]);
             double salary = Double.parseDouble(p[5]);
             EmployeeStatus status = EmployeeStatus.fromString(p[6]);
@@ -165,9 +166,4 @@ public final class EmployeeDAO implements IEmployeeDAO {
         }
     }
 
-    private static String unescapeField(String value) {
-        if (value == null)
-            return "";
-        return value.replace("\\|", "|").replace("\\\\", "\\");
-    }
 }

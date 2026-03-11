@@ -76,6 +76,7 @@ public class AttendanceManager {
 
     
     public AttendanceSummary getMonthlySummary(String employeeId, int month, int year) throws Exception {
+//        System.out.println("[DEBUG] getMonthlySummary called");
         int workingDays = 0;
         int absentDays = 0;
         double overtime = 0;
