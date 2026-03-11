@@ -63,7 +63,7 @@ public class SalaryMenuUI {
 
     private void calculateSalary() throws Exception {
         //Input
-        String id = console.readString("Employee ID: ");
+        String id = console.readString("Employee ID: ").trim().toUpperCase();
         int month = console.readInt("Month (1-12): ");
         int year = console.readInt("Year: ");
 
@@ -82,7 +82,7 @@ public class SalaryMenuUI {
     private void viewSalaryDetail() throws Exception {
 
         //Input
-        String id = console.readString("Employee ID: ");
+        String id = console.readString("Employee ID: ").trim().toUpperCase();
         int month = console.readInt("Month (1-12): ");
         int year = console.readInt("Year: ");
 

@@ -53,7 +53,7 @@ public class ReportManager {
         System.out.println("\n=================================================================");
         System.out.println(" LOW ATTENDANCE on: " + String.format("%02d/%d", month, year)
                 + "  (threshold: > " + LOW_ATTENDANCE_THRESHOLD + " absent days)");
-        System.out.println("\n=================================================================");
+        System.out.println("=================================================================");
 
         List<LowAttendanceEntry> entries = getLowAttendanceEntry(month, year);
 
@@ -102,7 +102,7 @@ public class ReportManager {
         System.out.println("\n=================================================================");
         System.out.println(" TOP " + topN + " HIGHEST PAID — "
                 + String.format("%02d/%d", month, year));
-        System.out.println("\n=================================================================");
+        System.out.println("=================================================================");
 
         if (top.isEmpty()) {
             System.out.println("  No salary records found for this period.");

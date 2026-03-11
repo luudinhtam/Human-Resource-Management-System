@@ -74,9 +74,14 @@ public class EmployeeMenuUI {
     private void addEmployee() throws Exception {
         System.out.println("\n--- Add New Employee ---");
         System.out.println("Type: 1=FullTime  2=PartTime");
-        int type = console.readInt("Choose type: ");
+        int type;
+        while (true) {
+            type = console.readInt("Choose type: ");
+            if (type == 1 || type == 2) break;
+            console.printError("Invalid choice. Please enter 1 (FullTime) or 2 (PartTime).");
+        }
 
-        String id = console.readString("Employee ID    : ");
+        String id = console.readString("Employee ID    : ").trim().toUpperCase();
         InputValidator.validateEmployeeId(id);
 
         String name = console.readString("Name           : ");
@@ -88,7 +93,7 @@ public class EmployeeMenuUI {
         String title = console.readString("Job Title      : ");
         InputValidator.validateJobTitle(title);
 
-        String dateStr = console.readString("Date of Joining (yyyy-MM-dd): ");
+        String dateStr = console.readString("Date of Joining (dd/MM/yyyy): ");
         LocalDate joined = InputValidator.validateDate(dateStr);
 
         double salary = InputValidator.validatePositiveDouble(
@@ -117,7 +122,7 @@ public class EmployeeMenuUI {
 
     private void updateEmployee() throws Exception {
         // We use id to check whether the employee exist or not
-        String id = console.readString("Employee ID to update: ");
+        String id = console.readString("Employee ID to update: ").trim().toUpperCase();
         Employee emp = employeeManager.findById(id);
 
         // If the employee exist, show current info
@@ -155,7 +160,7 @@ public class EmployeeMenuUI {
     private void removeEmployee() throws Exception {
 
         // We use ID to find the employee to REMOVE
-        String id = console.readString("Employee ID to remove: ");
+        String id = console.readString("Employee ID to remove: ").trim().toUpperCase();
         if (console.readConfirm("Are you sure?"))
             employeeManager.removeEmployee(id);
         else
@@ -203,7 +208,7 @@ public class EmployeeMenuUI {
     }
 
     private void toggleEmployeeStatus() throws Exception {
-        String id = console.readString("Employee ID: ");
+        String id = console.readString("Employee ID: ").trim().toUpperCase();
         Employee emp = employeeManager.findById(id);
         if (emp.isActive())
             employeeManager.deactivateEmployee(id);

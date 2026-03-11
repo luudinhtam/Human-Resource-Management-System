@@ -3,6 +3,7 @@ package util;
 import exception.InvalidInputException;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import entity.AttendanceStatus;
@@ -21,6 +22,8 @@ public class InputValidator {
     public static void validateName(String name) {
         if (name == null || name.trim().isEmpty())
             throw new InvalidInputException("Name must not be empty.");   // BR2
+        if (!name.trim().matches("[a-zA-Z\\s]+"))
+            throw new InvalidInputException("Name must only contain letters and spaces, no numbers or special characters.");
     }
 
     public static void validateDepartment(String dept) {
@@ -31,6 +34,8 @@ public class InputValidator {
     public static void validateJobTitle(String jobTitle) {
         if (jobTitle == null || jobTitle.trim().isEmpty())
             throw new InvalidInputException("Job title must not be empty.");
+        if (!jobTitle.trim().matches("[a-zA-Z\\s]+"))
+            throw new InvalidInputException("Job Title must only contain letters and spaces, no numbers or special characters.");
     }
 
     public static void validateBasicSalary(double salary) {
@@ -68,13 +73,15 @@ public class InputValidator {
         }
     }
 
-    /** Parse date from yyyy-MM-dd */
+    /** Parse date from dd/MM/yyyy */
     public static LocalDate validateDate(String dateStr) {
         try {
-            return LocalDate.parse(dateStr.trim());
-        } catch (DateTimeParseException e) {
-            throw new InvalidInputException("Date must be in format yyyy-MM-dd (e.g. 2024-01-15).");
-        }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                return LocalDate.parse(dateStr.trim(), formatter);
+            } catch (DateTimeParseException e) {
+                throw new InvalidInputException("Date must be in format dd/MM/yyyy (e.g. 15/01/2024).");
+            }
+        
     }
 
     public static int validatePositiveInt(String input, String fieldName) {
@@ -95,5 +102,10 @@ public class InputValidator {
         } catch (NumberFormatException e) {
             throw new InvalidInputException(fieldName + " must be a valid number.");
         }
+    }
+
+    //format Date dd/MM/yyyy
+    public static String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

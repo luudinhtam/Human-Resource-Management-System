@@ -2,6 +2,8 @@ package entity;
 
 import java.time.LocalDate;
 
+import util.InputValidator;
+
 public class Attendance {
 
     private String employeeId;
@@ -75,7 +77,7 @@ public class Attendance {
 
     public void displayInfo() {
         System.out.printf("  %s, %-8s, Overtime: %.1f hrs, Note: %s%n",
-                date, status, overtimeHours, note);
+                InputValidator.formatDate(date), status, overtimeHours, note);
     }
 
     // ── Serialization ─────────────────────────────────────────────────
