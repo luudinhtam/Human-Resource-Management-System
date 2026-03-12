@@ -1,7 +1,7 @@
 package entity;
-
+// added LEAVE status (bug: 1.01)
 public enum EmployeeStatus {
-    ACTIVE, INACTIVE;
+    ACTIVE, INACTIVE, LEAVE;
 
     public static EmployeeStatus fromString(String s) {
         switch (s.trim().toUpperCase()) {
