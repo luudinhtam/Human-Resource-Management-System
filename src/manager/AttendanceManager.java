@@ -49,6 +49,12 @@ public class AttendanceManager {
         if (attendanceDAO.existsByEmployeeIdAndDate(id, attendance.getDate()))
             throw new DuplicateAttendanceException(id, attendance.getDate().toString());
 
+        //Check INACTIVE and LEAVE employee (bug: 1.01)
+
+        if(employee.getStatus() == entity.EmployeeStatus.INACTIVE || employee.getStatus() == entity.EmployeeStatus.LEAVE)
+            throw new exception.InactiveEmployeeException("Record can not work for INACTIVE or LEAVE employee: " + id);
+
+
         // ADD
         attendanceDAO.add(attendance);
         System.out.println("[SUCCESS] Attendance recorded for " + id
