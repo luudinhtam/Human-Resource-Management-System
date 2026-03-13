@@ -32,9 +32,28 @@ public class AttendanceManager {
         if (!employeeManager.exists(id))
             throw new EmployeeNotFoundException(id);
 
+        //Check exactly date what is
+        LocalDate recordDate = attendance.getDate();
+        LocalDate currentDate = LocalDate.now();
+
+        //Take info about join date of employee
+        entity.Employee employee = employeeManager.findById(id);
+        LocalDate joinDate = employee.getDateOfJoining();
+
+
+        //Check valid date (not future) and (not after current date)
+        if (recordDate.isBefore(joinDate) || recordDate.isAfter(currentDate)) {
+            throw new exception.InvalidInputException("Invalid date: " + recordDate + ". Date must be between " + joinDate + " and " + currentDate);
+        }
         // Check for ID and Date
         if (attendanceDAO.existsByEmployeeIdAndDate(id, attendance.getDate()))
             throw new DuplicateAttendanceException(id, attendance.getDate().toString());
+
+        //Check INACTIVE and LEAVE employee (bug: 1.01)
+
+        if(employee.getStatus() == entity.EmployeeStatus.INACTIVE || employee.getStatus() == entity.EmployeeStatus.LEAVE)
+            throw new exception.InactiveEmployeeException("Record can not work for INACTIVE or LEAVE employee: " + id);
+
 
         // ADD
         attendanceDAO.add(attendance);
