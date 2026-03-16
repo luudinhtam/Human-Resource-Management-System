@@ -89,7 +89,7 @@ public class Salary {
     @Override
     public String toString() {
         return employeeId + "," + month + "," + year + ","
-                + basicSalary + "," + overtimePay + "," + absenceDeduction + ","
+                + (long) basicSalary + "," + (long) overtimePay + "," + (long) absenceDeduction + ","
                 + workingDays + "," + absentDays + "," + overtimeHours;
     }
 
