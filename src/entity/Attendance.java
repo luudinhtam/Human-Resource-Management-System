@@ -88,7 +88,7 @@ public class Attendance {
         return employeeId + ","
                 + date + ","
                 + status + ","
-                + overtimeHours + ","
+                + String.format("%.1f", overtimeHours) + ","
                 + note;
     }
 
