@@ -4,7 +4,9 @@ import dao.interfaces.ISalaryDAO;
 import entity.Employee;
 import entity.Salary;
 import exception.InactiveEmployeeException;
+import exception.InvalidInputException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class SalaryManager {
@@ -21,21 +23,29 @@ public class SalaryManager {
     public Salary calculateSalary(Employee employee, int month, int year,
             AttendanceManager attendanceManager) throws Exception {
 
-        // Check for ACTIVE employee
+        // Check ACTIVE
         if (!employee.isActive())
             throw new InactiveEmployeeException(employee.getEmployeeId());
+
+        // Check salary period must be after or same month as joining date
+        LocalDate joinDate = employee.getDateOfJoining();
+        LocalDate calcPeriod = LocalDate.of(year, month, 1);
+
+        if (calcPeriod.isBefore(joinDate.withDayOfMonth(1)))
+            throw new InvalidInputException(
+                    "Salary period " + String.format("%02d/%d", month, year)
+                            + " must be after date of joining ("
+                            + String.format("%02d/%d", joinDate.getMonthValue(), joinDate.getYear())
+                            + ")");
 
         // ID
         String id = employee.getEmployeeId();
 
-        // AttendanceSumary for all (3) info
+        // Single-pass summary
         AttendanceManager.AttendanceSummary summary = attendanceManager.getMonthlySummary(id, month, year);
 
         // BR7, BR8, BR9
-        //OVERTIME PAY
         double overtimePay = summary.overtimeHours * employee.getOvertimeRate();
-
-        //ABSENCE DEDUCTION
         double absenceDeduction = summary.absentDays * employee.getAbsenceDeductionRate();
 
         Salary salary = new Salary(id, month, year,
@@ -77,6 +87,6 @@ public class SalaryManager {
                         s.getAbsenceDeduction(), s.getTotalSalary());
             }
         }
-        
+
     }
 }

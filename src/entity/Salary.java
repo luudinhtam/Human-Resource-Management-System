@@ -74,7 +74,7 @@ public class Salary {
         System.out.printf("Employee ID      : %s%n", employeeId);
         System.out.printf("Period           : %02d/%d%n", month, year);
         System.out.printf("Basic Salary     : %,.0f VND%n", basicSalary);
-        System.out.printf("Overtime Pay     : %,.0f VND  (%f hrs)%n", overtimePay, overtimeHours);
+        System.out.printf("Overtime Pay     : %,.0f VND  (%.1f hrs)%n", overtimePay, overtimeHours);
         System.out.printf("Absence Deduction: %,.0f VND  (%d days)%n", absenceDeduction, absentDays);
         System.out.printf("Working Days     : %d%n", workingDays);
         System.out.println("--------------------------------------------");
