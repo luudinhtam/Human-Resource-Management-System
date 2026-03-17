@@ -33,7 +33,7 @@ public final class EmployeeDAO implements IEmployeeDAO {
     @Override
     public void add(Employee employee) throws IOException {
         employeeList.add(employee);
-        // saveToFile();
+        saveToFile();
     }
 
     @Override
