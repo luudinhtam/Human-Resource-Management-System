@@ -6,12 +6,15 @@ import entity.AttendanceStatus;
 import exception.AttendanceNotFoundException;
 import exception.DuplicateAttendanceException;
 import exception.EmployeeNotFoundException;
+import util.InputValidator;
 
 import java.time.LocalDate;
 import java.util.List;
 // import java.util.function.Predicate;
 
 public class AttendanceManager {
+
+    private static final int MAX_PAST_DAYS_FOR_ATTENDANCE = 30;
 
     private final IAttendanceDAO attendanceDAO;
     private final EmployeeManager employeeManager;
@@ -25,35 +28,43 @@ public class AttendanceManager {
 
     // ========== ADD ==========
     public void recordAttendance(Attendance attendance) throws Exception {
-        // ID
         String id = attendance.getEmployeeId();
 
         // Check for ID
         if (!employeeManager.exists(id))
             throw new EmployeeNotFoundException(id);
 
-        //Check exactly date what is
         LocalDate recordDate = attendance.getDate();
         LocalDate currentDate = LocalDate.now();
 
-        //Take info about join date of employee
         entity.Employee employee = employeeManager.findById(id);
         LocalDate joinDate = employee.getDateOfJoining();
 
+        // Limit date in the past
+        LocalDate earliestAllowedDate = currentDate.minusDays(MAX_PAST_DAYS_FOR_ATTENDANCE);
+        LocalDate effectiveStartDate = joinDate.isAfter(earliestAllowedDate)
+                ? joinDate
+                : earliestAllowedDate;
 
-        //Check valid date (not future) and (not after current date)
-        if (recordDate.isBefore(joinDate) || recordDate.isAfter(currentDate)) {
-            throw new exception.InvalidInputException("Invalid date: " + recordDate + ". Date must be between " + joinDate + " and " + currentDate);
+        if (recordDate.isBefore(effectiveStartDate) || recordDate.isAfter(currentDate)) {
+            throw new exception.InvalidInputException(
+                    "Invalid date: " + InputValidator.formatDate(recordDate) +
+                            ". Date must be between " +
+                            InputValidator.formatDate(effectiveStartDate) +
+                            " and " +
+                            InputValidator.formatDate(currentDate) +
+                            " (max " + MAX_PAST_DAYS_FOR_ATTENDANCE + " days in the past)");
         }
+
         // Check for ID and Date
         if (attendanceDAO.existsByEmployeeIdAndDate(id, attendance.getDate()))
             throw new DuplicateAttendanceException(id, attendance.getDate().toString());
 
-        //Check INACTIVE and LEAVE employee (bug: 1.01)
-
-        if(employee.getStatus() == entity.EmployeeStatus.INACTIVE || employee.getStatus() == entity.EmployeeStatus.LEAVE)
-            throw new exception.InactiveEmployeeException("Record can not work for INACTIVE or LEAVE employee: " + id);
-
+        // Check INACTIVE and LEAVE employee
+        if (employee.getStatus() == entity.EmployeeStatus.INACTIVE ||
+                employee.getStatus() == entity.EmployeeStatus.LEAVE)
+            throw new exception.InactiveEmployeeException(
+                    "Record can not work for INACTIVE or LEAVE employee: " + id);
 
         // ADD
         attendanceDAO.add(attendance);
@@ -93,9 +104,8 @@ public class AttendanceManager {
                         && a.getDate().getYear() == year);
     }
 
-    
     public AttendanceSummary getMonthlySummary(String employeeId, int month, int year) throws Exception {
-//        System.out.println("[DEBUG] getMonthlySummary called");
+        // System.out.println("[DEBUG] getMonthlySummary called");
         int workingDays = 0;
         int absentDays = 0;
         double overtime = 0;
@@ -132,12 +142,12 @@ public class AttendanceManager {
     }
 
     // public int countWorkingDays(String employeeId, int month, int year) {
-    //     int count = 0;
-    //     for (Attendance a : attendanceDAO.findByEmployeeId(employeeId))
-    //         if (a.getDate().getMonthValue() == month && a.getDate().getYear() == year)
-    //             if (a.getStatus() == AttendanceStatus.PRESENT)
-    //                 count++;
-    //     return count;
+    // int count = 0;
+    // for (Attendance a : attendanceDAO.findByEmployeeId(employeeId))
+    // if (a.getDate().getMonthValue() == month && a.getDate().getYear() == year)
+    // if (a.getStatus() == AttendanceStatus.PRESENT)
+    // count++;
+    // return count;
     // }
 
     /*
