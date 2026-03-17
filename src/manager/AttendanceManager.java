@@ -99,7 +99,13 @@ public class AttendanceManager {
         int workingDays = 0;
         int absentDays = 0;
         double overtime = 0;
-
+        
+        
+        //Check employee exists
+        if (!employeeManager.exists(employeeId)) {
+            throw new EmployeeNotFoundException(employeeId);
+        }
+        
         // Check for ID
         for (Attendance a : attendanceDAO.findByEmployeeId(employeeId)) {
 
