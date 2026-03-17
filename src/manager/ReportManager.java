@@ -46,9 +46,6 @@ public class ReportManager {
             if (summary.absentDays > LOW_ATTENDANCE_THRESHOLD)
                 result.add(new LowAttendanceEntry(e, summary.absentDays));
         }
-
-        result.sort((a, b) -> Integer.compare(b.absentDays, a.absentDays));
-
         return result;
     }
 

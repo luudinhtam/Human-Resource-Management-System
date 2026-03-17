@@ -27,8 +27,6 @@ public final class SalaryDAO implements ISalaryDAO {
     public void save(Salary salary) throws IOException {
         // Remove existing record for same employee + period (upsert)
         removeFromList(salary.getEmployeeId(), salary.getMonth(), salary.getYear());
-        
-        // Add record 
         salaryList.add(salary);
         saveToFile();
     }

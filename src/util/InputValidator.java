@@ -55,8 +55,8 @@ public class InputValidator {
 
     public static void validateYear(int year) {
         int current = LocalDate.now().getYear();
-        if (year < 2000 || year > current)
-            throw new InvalidInputException("Year must be between 2000 and " + (current) + ".");
+        if (year < 2000 || year > current + 1)
+            throw new InvalidInputException("Year must be between 2000 and " + (current + 1) + ".");
     }
 
     public static void validateHoursPerWeek(int hours) {
