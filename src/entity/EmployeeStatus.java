@@ -9,6 +9,8 @@ public enum EmployeeStatus {
                 return ACTIVE;
             case "INACTIVE":
                 return INACTIVE;
+            case "LEAVE":
+                return LEAVE;
             default:
                 throw new IllegalArgumentException("Invalid status: " + s);
         }
