@@ -44,8 +44,8 @@ public class InputValidator {
     }
 
     public static void validateOvertimeHours(double hours) {
-        if (hours < 0)
-            throw new InvalidInputException("Overtime hours must be >= 0.");
+        if (hours < 0 || hours > 300) //Max overtime/day not over 10 hours -> 10 * 30
+            throw new InvalidInputException("Overtime hours must between 0 and 300.");
     }
 
     public static void validateMonth(int month) {
