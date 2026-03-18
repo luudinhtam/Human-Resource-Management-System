@@ -38,13 +38,16 @@ public class ReportManager {
 
         // Loop for all ACTIVE employee
         for (Employee e : employeeManager.getActiveEmployees()) {
-            // Get summary for each employee
-            AttendanceManager.AttendanceSummary summary = attendanceManager.getMonthlySummary(e.getEmployeeId(), month,
-                    year);
+            try {
+                    // Get summary for each employee
+                AttendanceManager.AttendanceSummary summary = attendanceManager.getMonthlySummary(e.getEmployeeId(), month, year);
 
-            // Only take people who has absentDays > LOW_ATTENDANCE_THRESHOLD
-            if (summary.absentDays > LOW_ATTENDANCE_THRESHOLD)
-                result.add(new LowAttendanceEntry(e, summary.absentDays));
+                // Only take people who has absentDays > LOW_ATTENDANCE_THRESHOLD
+                if (summary.absentDays > LOW_ATTENDANCE_THRESHOLD)
+                    result.add(new LowAttendanceEntry(e, summary.absentDays));
+            } catch (exception.InvalidInputException ex) {
+                //ignore employee with no attendance records (we can not get summary for them)
+            }
         }
         return result;
     }
