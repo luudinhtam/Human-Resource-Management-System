@@ -6,6 +6,8 @@ import entity.EmployeeStatus;
 import entity.EmployeeType;
 import entity.FullTimeEmployee;
 import entity.PartTimeEmployee;
+import exception.AttendanceNotFoundException;
+import exception.EmployeeNotFoundException;
 import exception.InvalidInputException;
 import util.FileManager;
 
@@ -39,12 +41,19 @@ public final class EmployeeDAO implements IEmployeeDAO {
 
     @Override
     public void update(Employee employee) throws IOException {
+        boolean found = false;
+
         for (int i = 0; i < employeeList.size(); i++) {
             if (employeeList.get(i).getEmployeeId().equals(employee.getEmployeeId())) {
                 employeeList.set(i, employee);
+                found = true;
                 saveToFile();
                 return;
             }
+        }
+
+        if(!found) {
+            throw new EmployeeNotFoundException(employee.getEmployeeId());
         }
     }
 
