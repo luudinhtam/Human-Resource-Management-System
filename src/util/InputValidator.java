@@ -10,7 +10,8 @@ import entity.AttendanceStatus;
 
 public class InputValidator {
 
-    private InputValidator() {}
+    private InputValidator() {
+    }
 
     public static void validateEmployeeId(String id) {
         if (id == null || id.trim().isEmpty())
@@ -21,21 +22,23 @@ public class InputValidator {
 
     public static void validateName(String name) {
         if (name == null || name.trim().isEmpty())
-            throw new InvalidInputException("Name must not be empty.");   // BR2
+            throw new InvalidInputException("Name must not be empty."); // BR2
         if (!name.trim().matches("[a-zA-Z\\s]+"))
-            throw new InvalidInputException("Name must only contain letters and spaces, no numbers or special characters.");
+            throw new InvalidInputException(
+                    "Name must only contain letters and spaces, no numbers or special characters.");
     }
 
     public static void validateDepartment(String dept) {
         if (dept == null || dept.trim().isEmpty())
-            throw new InvalidInputException("Department must not be empty.");  // BR2
+            throw new InvalidInputException("Department must not be empty."); // BR2
     }
 
     public static void validateJobTitle(String jobTitle) {
         if (jobTitle == null || jobTitle.trim().isEmpty())
             throw new InvalidInputException("Job title must not be empty.");
         if (!jobTitle.trim().matches("[a-zA-Z\\s]+"))
-            throw new InvalidInputException("Job Title must only contain letters and spaces, no numbers or special characters.");
+            throw new InvalidInputException(
+                    "Job Title must only contain letters and spaces, no numbers or special characters.");
     }
 
     public static void validateBasicSalary(double salary) {
@@ -44,7 +47,7 @@ public class InputValidator {
     }
 
     public static void validateOvertimeHours(double hours) {
-        if (hours < 0 || hours > 300) //Max overtime/day not over 10 hours -> 10 * 30
+        if (hours < 0 || hours > 300) // Max overtime/day not over 10 hours -> 10 * 30
             throw new InvalidInputException("Overtime hours must between 0 and 300.");
     }
 
@@ -76,18 +79,19 @@ public class InputValidator {
     /** Parse date from dd/MM/yyyy */
     public static LocalDate validateDate(String dateStr) {
         try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                return LocalDate.parse(dateStr.trim(), formatter);
-            } catch (DateTimeParseException e) {
-                throw new InvalidInputException("Date must be in format dd/MM/yyyy (e.g. 15/01/2024).");
-            }
-        
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return LocalDate.parse(dateStr.trim(), formatter);
+        } catch (DateTimeParseException e) {
+            throw new InvalidInputException("Date must be in format dd/MM/yyyy (e.g. 15/01/2024).");
+        }
+
     }
 
     public static int validatePositiveInt(String input, String fieldName) {
         try {
             int val = Integer.parseInt(input.trim());
-            if (val <= 0) throw new InvalidInputException(fieldName + " must be a positive integer.");
+            if (val <= 0)
+                throw new InvalidInputException(fieldName + " must be a positive integer.");
             return val;
         } catch (NumberFormatException e) {
             throw new InvalidInputException(fieldName + " must be a valid integer.");
@@ -97,14 +101,15 @@ public class InputValidator {
     public static double validatePositiveDouble(String input, String fieldName) {
         try {
             double val = Double.parseDouble(input.trim());
-            if (val < 0) throw new InvalidInputException(fieldName + " must be >= 0.");
+            if (val < 0)
+                throw new InvalidInputException(fieldName + " must be >= 0.");
             return val;
         } catch (NumberFormatException e) {
             throw new InvalidInputException(fieldName + " must be a valid number.");
         }
     }
 
-    //format Date dd/MM/yyyy
+    // format Date dd/MM/yyyy
     public static String formatDate(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
