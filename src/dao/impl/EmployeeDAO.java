@@ -6,6 +6,7 @@ import entity.EmployeeStatus;
 import entity.EmployeeType;
 import entity.FullTimeEmployee;
 import entity.PartTimeEmployee;
+import exception.InvalidInputException;
 import util.FileManager;
 
 import java.io.IOException;
@@ -154,9 +155,12 @@ public final class EmployeeDAO implements IEmployeeDAO {
             Employee emp;
             if (type == EmployeeType.FULL_TIME) {
                 emp = new FullTimeEmployee(id, name, dept, title, date, salary);
-            } else {
+            } else if (type == EmployeeType.PART_TIME) {
                 int hours = p.length > 8 ? Integer.parseInt(p[8].trim()) : 0;
                 emp = new PartTimeEmployee(id, name, dept, title, date, salary, hours);
+            }
+            else {
+                throw new InvalidInputException("Invalid employee type: " + type);
             }
             emp.setStatus(status);
             return emp;
