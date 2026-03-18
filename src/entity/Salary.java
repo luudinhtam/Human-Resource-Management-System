@@ -95,6 +95,11 @@ public class Salary {
 
     public static Salary fromString(String line) {
         String[] p = line.split(",");
+
+        if(p.length != 9) {
+            throw new IllegalArgumentException("Invalid salary record: " + line);
+        }
+
         return new Salary(
                 p[0],
                 Integer.parseInt(p[1]),

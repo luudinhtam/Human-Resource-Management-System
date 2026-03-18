@@ -1,6 +1,7 @@
 package manager;
 
 import dao.interfaces.ISalaryDAO;
+import entity.Attendance;
 import entity.Employee;
 import entity.Salary;
 import exception.InactiveEmployeeException;
@@ -27,6 +28,7 @@ public class SalaryManager {
         if (!employee.isActive())
             throw new InactiveEmployeeException(employee.getEmployeeId());
 
+        // Validate DATE
         // Check salary period must be after or same month as joining date
         LocalDate joinDate = employee.getDateOfJoining();
         LocalDate calcPeriod = LocalDate.of(year, month, 1);
@@ -41,8 +43,17 @@ public class SalaryManager {
         // ID
         String id = employee.getEmployeeId();
 
-        // Single-pass summary
+        // Get SUMMARY
         AttendanceManager.AttendanceSummary summary = attendanceManager.getMonthlySummary(id, month, year);
+
+        // Check employee must have >= 1 attendance records
+        List<Attendance> monthlyRecords = attendanceManager.getMonthlyAttendance(id, month, year);
+        if (monthlyRecords.isEmpty()) {
+            throw new exception.InvalidInputException(
+                    "No attendance records found for period " +
+                            String.format("%02d/%d", month, year) +
+                            ". Cannot calculate salary without attendance data.");
+        }
 
         // BR7, BR8, BR9
         double overtimePay = summary.overtimeHours * employee.getOvertimeRate();

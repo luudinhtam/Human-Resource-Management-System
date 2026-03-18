@@ -6,6 +6,8 @@ import entity.EmployeeStatus;
 import entity.EmployeeType;
 import entity.FullTimeEmployee;
 import entity.PartTimeEmployee;
+import exception.EmployeeNotFoundException;
+import exception.InvalidInputException;
 import util.FileManager;
 
 import java.io.IOException;
@@ -38,23 +40,38 @@ public final class EmployeeDAO implements IEmployeeDAO {
 
     @Override
     public void update(Employee employee) throws IOException {
+        boolean found = false;
+
         for (int i = 0; i < employeeList.size(); i++) {
             if (employeeList.get(i).getEmployeeId().equals(employee.getEmployeeId())) {
                 employeeList.set(i, employee);
+                found = true;
                 saveToFile();
                 return;
             }
+        }
+
+        if(!found) {
+            throw new EmployeeNotFoundException(employee.getEmployeeId());
         }
     }
 
     @Override
     public void delete(String employeeId) throws IOException {
+
+        boolean found = false;
+
         for (int i = 0; i < employeeList.size(); i++) {
             if (employeeList.get(i).getEmployeeId().equals(employeeId)) {
                 employeeList.remove(i);
+                found = true;
                 saveToFile();
                 return;
             }
+        }
+
+        if(!found) {
+            throw new EmployeeNotFoundException(employeeId);
         }
     }
 
@@ -154,9 +171,12 @@ public final class EmployeeDAO implements IEmployeeDAO {
             Employee emp;
             if (type == EmployeeType.FULL_TIME) {
                 emp = new FullTimeEmployee(id, name, dept, title, date, salary);
-            } else {
+            } else if (type == EmployeeType.PART_TIME) {
                 int hours = p.length > 8 ? Integer.parseInt(p[8].trim()) : 0;
                 emp = new PartTimeEmployee(id, name, dept, title, date, salary, hours);
+            }
+            else {
+                throw new InvalidInputException("Invalid employee type: " + type);
             }
             emp.setStatus(status);
             return emp;

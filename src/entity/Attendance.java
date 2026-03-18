@@ -95,14 +95,17 @@ public class Attendance {
     // fromString is used to UNFORMAT data from a FILE
     public static Attendance fromString(String line) {
         String[] p = line.split(",", -1);
-        
+
+        if (p.length > 5) {
+            throw new IllegalArgumentException("Invalid attendance record: " + line);
+        }
+
         return new Attendance(
                 p[0],
                 LocalDate.parse(p[1]),
                 AttendanceStatus.fromString(p[2]),
                 Double.parseDouble(p[3]),
-                p.length > 4 ? p[4] : ""
-            );
-        // When user input NOTE, p.length > 4 (p.length == 5)
+                p.length > 4 ? p[4] : "");
+        // When user input NOTE, (p.length == 5)
     }
 }

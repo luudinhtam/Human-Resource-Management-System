@@ -2,6 +2,7 @@ package dao.impl;
 
 import dao.interfaces.IAttendanceDAO;
 import entity.Attendance;
+import exception.AttendanceNotFoundException;
 // import entity.AttendanceStatus;
 import util.FileManager;
 
@@ -33,6 +34,8 @@ public final class AttendanceDAO implements IAttendanceDAO {
 
     @Override
     public void update(Attendance updated) throws IOException {
+        boolean found = false;
+
         //Loop through all the List
         for (int i = 0; i < attendanceList.size(); i++) {
             Attendance a = attendanceList.get(i);
@@ -41,9 +44,14 @@ public final class AttendanceDAO implements IAttendanceDAO {
                     && a.getDate().equals(updated.getDate())) {
                 //replace an old record by a new record
                 attendanceList.set(i, updated); 
+                found = true;
                 saveToFile();
                 return;
             }
+        }
+
+        if(!found) {
+            throw new AttendanceNotFoundException(updated.getEmployeeId(), updated.getDate());
         }
     }
 
