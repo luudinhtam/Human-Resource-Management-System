@@ -35,8 +35,8 @@ public class ReportManager {
     // ── BR12 ──────────────────────────────────────────────────────────
     public List<LowAttendanceEntry> getLowAttendanceEntry(int month, int year) throws Exception {
         List<LowAttendanceEntry> result = new ArrayList<>();
-        
-        //Loop for all ACTIVE employee
+
+        // Loop for all ACTIVE employee
         for (Employee e : employeeManager.getActiveEmployees()) {
             // Get summary for each employee
             AttendanceManager.AttendanceSummary summary = attendanceManager.getMonthlySummary(e.getEmployeeId(), month,
@@ -76,13 +76,12 @@ public class ReportManager {
         System.out.println("\n=================================================================");
     }
 
-
     // Comparator
-    private static final Comparator<Salary> BY_TOTAL_SALARY_ASC =
-        (a, b) -> Double.compare(a.getTotalSalary(), b.getTotalSalary());
+    private static final Comparator<Salary> BY_TOTAL_SALARY_ASC = (a, b) -> Double.compare(a.getTotalSalary(),
+            b.getTotalSalary());
 
-    private static final Comparator<Salary> BY_TOTAL_SALARY_DESC =
-        (a, b) -> Double.compare(b.getTotalSalary(), a.getTotalSalary());
+    private static final Comparator<Salary> BY_TOTAL_SALARY_DESC = (a, b) -> Double.compare(b.getTotalSalary(),
+            a.getTotalSalary());
 
     // ── BR13 ──────────────────────────────────────────────────────────
     public List<Salary> getHighestPaidEmployees(int month, int year, int topN) throws Exception {
@@ -92,11 +91,16 @@ public class ReportManager {
         //
         Collections.sort(salaries, BY_TOTAL_SALARY_DESC);
 
-        // Get N first elements 
+        // Get N first elements
         return salaries.subList(0, Math.min(topN, salaries.size()));
     }
 
     public void printHighestPaidReport(int month, int year, int topN) throws Exception {
+
+        if (topN <= 0) {
+            throw new IllegalArgumentException("topN must be positive");
+        }
+
         List<Salary> top = getHighestPaidEmployees(month, year, topN);
 
         System.out.println("\n=================================================================");
