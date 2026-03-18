@@ -4,7 +4,6 @@ import exception.AppException;
 import manager.AttendanceManager;
 import manager.SalaryManager;
 import manager.EmployeeManager;
-import entity.Attendance;
 import entity.Employee;
 import entity.FullTimeEmployee;
 import entity.PartTimeEmployee;
@@ -172,7 +171,6 @@ public class EmployeeMenuUI {
             employeeManager.removeEmployee(id);
             attendanceManager.deleteByEmployeeId(id);
             salaryManager.deleteByEmployeeId(id);
-            System.out.println("[SUCCESS] Employee removed: " + id);
         } else {
             System.out.println("Cancelled.");
         }
@@ -194,7 +192,7 @@ public class EmployeeMenuUI {
     private void searchEmployee() throws Exception {
 
         // Choose a way to find out an employee
-        System.out.println("Search by: 1=Name  2=Department  3=Job Title");
+        System.out.println("Search by: 1=Name  2=Department  3=Job Title  4=ID");
         int choice = console.readInt("Select: ");
         List<Employee> result;
         switch (choice) {
@@ -207,6 +205,11 @@ public class EmployeeMenuUI {
             case 3:
                 result = employeeManager.findByJobTitle(console.readString("Job Title: "));
                 break;
+            case 4:
+                String id = console.readString("Employee ID: ").trim().toUpperCase();
+                Employee emp = employeeManager.findById(id);
+                emp.displayInfo();
+                return;
             default:
                 console.printError("Invalid choice.");
                 return;
