@@ -1,7 +1,10 @@
 package ui;
 
 import exception.AppException;
+import manager.AttendanceManager;
+import manager.SalaryManager;
 import manager.EmployeeManager;
+import entity.Attendance;
 import entity.Employee;
 import entity.FullTimeEmployee;
 import entity.PartTimeEmployee;
@@ -15,11 +18,14 @@ public class EmployeeMenuUI {
 
     private final EmployeeManager employeeManager;
     private final ConsoleHelper console;
-
+    private final AttendanceManager attendanceManager;
+    private final SalaryManager salaryManager;
     // Constructor
-    public EmployeeMenuUI(EmployeeManager employeeManager, ConsoleHelper console) {
+    public EmployeeMenuUI(EmployeeManager employeeManager, ConsoleHelper console, AttendanceManager attendanceManager, SalaryManager salaryManager) {
         this.employeeManager = employeeManager;
         this.console = console;
+        this.attendanceManager = attendanceManager;
+        this.salaryManager = salaryManager;
     }
 
     // Method show()
@@ -157,14 +163,19 @@ public class EmployeeMenuUI {
         employeeManager.updateEmployee(id, name, dept, title, salary);
     }
 
+
     private void removeEmployee() throws Exception {
 
         // We use ID to find the employee to REMOVE
         String id = console.readString("Employee ID to remove: ").trim().toUpperCase();
-        if (console.readConfirm("Are you sure?"))
+        if (console.readConfirm("Are you sure?")) {
             employeeManager.removeEmployee(id);
-        else
+            attendanceManager.deleteByEmployeeId(id);
+            salaryManager.deleteByEmployeeId(id);
+            System.out.println("[SUCCESS] Employee removed: " + id);
+        } else {
             System.out.println("Cancelled.");
+        }
     }
 
     private void viewAllEmployees() throws Exception {

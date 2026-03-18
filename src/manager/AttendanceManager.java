@@ -78,6 +78,11 @@ public class AttendanceManager {
         System.out.println("[SUCCESS] Attendance updated for " + employeeId + " on " + date);
     }
 
+    public void deleteByEmployeeId(String employeeId) throws Exception {
+        attendanceDAO.deleteByEmployeeId(employeeId);
+        System.out.println("[SUCCESS] All attendance records deleted: " + employeeId);
+    }
+
     // === Queries ===
     // ========== VIEW ==========
     // get Attendance By Employee Id

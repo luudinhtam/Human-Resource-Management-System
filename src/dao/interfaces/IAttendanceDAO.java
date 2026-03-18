@@ -11,6 +11,8 @@ public interface IAttendanceDAO {
     void add(Attendance attendance) throws IOException;
 
     void update(Attendance attendance) throws IOException;
+    
+    void deleteByEmployeeId(String employeeId) throws IOException;
 
     List<Attendance> findByEmployeeId(String employeeId) throws IOException;
 

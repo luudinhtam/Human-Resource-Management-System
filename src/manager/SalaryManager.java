@@ -73,6 +73,12 @@ public class SalaryManager {
         return salaryDAO.findByEmployeeAndPeriod(employeeId, month, year);
     }
 
+    //delete salary record of an employee if delete employee
+    public void deleteByEmployeeId(String employeeId) throws Exception {
+        salaryDAO.deleteByEmployeeId(employeeId);
+        System.out.println("[SUCCESS] All salary records deleted: " + employeeId);
+    }
+
     public List<Salary> getAllMonthlySalaries(int month, int year) throws Exception {
         return salaryDAO.findByPeriod(month, year);
     }

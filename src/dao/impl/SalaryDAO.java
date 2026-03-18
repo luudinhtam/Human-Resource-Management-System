@@ -53,6 +53,13 @@ public final class SalaryDAO implements ISalaryDAO {
             saveToFile();
     }
 
+    @Override
+    public void deleteByEmployeeId(String employeeId) throws IOException {
+        // Remove all salary records of an employee
+        salaryList.removeIf(s -> s.getEmployeeId().equals(employeeId));
+        saveToFile();
+    }
+
     // ── Queries ───────────────────────────────────────────────────────
 
     @Override

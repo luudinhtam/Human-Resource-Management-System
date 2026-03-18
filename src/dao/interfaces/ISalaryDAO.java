@@ -11,6 +11,8 @@ public interface ISalaryDAO {
 
     void deleteByPeriod(String employeeId, int month, int year) throws IOException;
 
+    void deleteByEmployeeId(String employeeId) throws IOException;
+
     Salary findByEmployeeAndPeriod(String employeeId, int month, int year) throws IOException;
 
     List<Salary> findByPeriod(int month, int year) throws IOException;
