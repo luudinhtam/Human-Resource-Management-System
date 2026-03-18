@@ -26,9 +26,24 @@ public final class SalaryDAO implements ISalaryDAO {
     @Override
     public void save(Salary salary) throws IOException {
         // Remove existing record for same employee + period (upsert)
-        removeFromList(salary.getEmployeeId(), salary.getMonth(), salary.getYear());
-        salaryList.add(salary);
-        saveToFile();
+
+        // Handling data loss problem that happens because of error between operations Remove and Add.
+        List<Salary> backup = new ArrayList<>(salaryList);
+
+        try {
+
+            removeFromList(salary.getEmployeeId(), salary.getMonth(), salary.getYear());
+            salaryList.add(salary);
+            saveToFile();
+
+        } catch (IOException e) {
+
+            salaryList.clear();
+            salaryList.addAll(backup);
+
+            System.out.println("Error occurred. Data has been restored.");
+            throw e;
+        }
     }
 
     @Override
