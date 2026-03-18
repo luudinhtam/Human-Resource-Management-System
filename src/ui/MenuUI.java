@@ -30,7 +30,7 @@ public class MenuUI {
         SalaryManager salaryManager = new SalaryManager(new SalaryDAO(), employeeManager);
         ReportManager reportManager = new ReportManager(employeeManager, attendanceManager, salaryManager);
 
-        this.employeeMenu = new EmployeeMenuUI(employeeManager, console);
+        this.employeeMenu = new EmployeeMenuUI(employeeManager, console, attendanceManager, salaryManager);
         this.attendanceMenu = new AttendanceMenuUI(attendanceManager, console);
         this.salaryMenu = new SalaryMenuUI(salaryManager, employeeManager, attendanceManager, console);
         this.reportMenu = new ReportMenuUI(reportManager, console);

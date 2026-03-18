@@ -47,6 +47,14 @@ public final class AttendanceDAO implements IAttendanceDAO {
         }
     }
 
+    @Override
+    public void deleteByEmployeeId(String employeeId) throws IOException {
+
+        //Remove all attendance records of an employee
+        attendanceList.removeIf(a -> a.getEmployeeId().equals(employeeId));
+        saveToFile();
+    }
+
     // ── Queries ───────────────────────────────────────────────────────
 
     @Override
