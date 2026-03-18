@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+// Assume all files are encoded in UTF-8
 // Reads and writes UTF-8 text files as lists of lines.
 
 public class FileManager {
