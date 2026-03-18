@@ -95,6 +95,10 @@ public class Attendance {
     // fromString is used to UNFORMAT data from a FILE
     public static Attendance fromString(String line) {
         String[] p = line.split(",", -1);
+
+        if (p.length != 4) {
+        throw new IllegalArgumentException("Invalid attendance record: " + line);
+    }
         
         return new Attendance(
                 p[0],
